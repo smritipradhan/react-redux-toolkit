@@ -84,8 +84,6 @@ import { createSlice , configureStore} from "@reduxjs/toolkit";
 
 configureStore like createStore creates a store but it makes merging multiple reducers into one reducer easier thereafter.
 
-```
-
 now we can call the configureStore and pass an object , not an reducer function but an object where we set a reducer property and thats the property expected by configureStore.Redux wants one main reducer function,which is responsible for Global State. For now
 
 ```
@@ -93,23 +91,19 @@ now we can call the configureStore and pass an object , not an reducer function 
 const store = configureStore({
 reducer:counterSlice.reducer
 })
-
 ```
 
 to use the reducer from that counterSlice which combines all those reducer methods to find in that slice.But is we had multiple Slices in bigger application for example..We could set up an object with key value pairs.A map of reducers.and this map is then set as a value for the main reducer and behind the scenes configureStore will emerge all those reducers into one big reducer. So it will merge them for us.
 
 ```
-
 const store = configureStore({
 reducer: { counter : counterSlice.reducer }
 })
-
 ```
 
 Final Code store -> index.js
 
 ```
-
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 
 const initialState = { counter: 0, showCounter: false };
@@ -162,4 +156,7 @@ export default store;
 ## Finalizing the Fetching Logic
 
 ## Exploring the Redux DevTools
+
+```
+
 ```
