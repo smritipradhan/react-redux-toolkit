@@ -1,5 +1,15 @@
 # Redux Toolkit
 
+Author: Smriti Pradhan
+Credits: Maximilian Schwarzmüller
+
+Topics we are going to focus on (Remember this is dummy project.)
+
+1. Redux Toolkit
+2. Configuring and Handling Multiple Slices
+3. Reading and Dispatching from New Slices
+4. Diving Deep (Check Redux-Toolkit Advance Repo (In Progress...)- Handling Asynchronous Task With Redux , The Redux Devtools)
+
 Redux Challenges and Introducing Redux Toolkit.
 
 1. Mistype the Action Identifiers in Complex Project (We could create constants for solution)
@@ -155,6 +165,8 @@ export default store;
 
 ```
 
+Counter.js
+
 ```
 
 import classes from "./Counter.module.css";
@@ -203,24 +215,149 @@ export default Counter;
 
 ## Working with Multiple Slices
 
+Now we will start working with multiple slices.In the App component as of now we will be adding an authentication component (just for practice). So based on the Login states we are going to render some of the components.For example the navigation bar changes based on the authentication state.
+
+After the user is logged in the header component will change.We will be using a separate slice as the logic for authentication is separate from the counter logic.
+
+store->index.js
+
+```
+const authInitialState = { isAuthenticated: false };
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: authInitialState,
+  reducers: {
+    login(state) {
+      state.isAuthenticated = true;
+    },
+    logout(state) {
+      state.isAuthenticated = false;
+    },
+  },
+});
+
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+    auth: authSlice.reducer,
+  },
+});
+```
+
+App.js
+
+```
+ <>
+      <Header />
+      <Auth />
+      <Counter />
+ </>
+
+```
+
+Changes in Counter.js
+
+```
+const counter = useSelector((state) => state.counter.counter);  //we use the same name we defined in configureStore()
+const showCounter = useSelector((state) => state.counter.showCounter);
+```
+
 ## Reading and Dispatching from New Slice
+
+1. Conditionally rendering the Components based on the isAuthenticated.
+
+```
+function App() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  return (
+    <>
+      <Header />
+      {isAuthenticated ? <UserProfile /> : <Auth />}
+      <Counter />
+    </>
+  );
+}
+
+```
+
+2. In Auth component for login changing the state login.Dispatching an action.
+
+```
+import classes from "./Auth.module.css";
+import { useDispatch } from "react-redux";
+import { authActions } from "./../store";
+
+const Auth = () => {
+  const dispatch = useDispatch();
+
+  const handleLogin = () => {
+    dispatch(authActions.login());
+  };
+  return (
+    <main className={classes.auth}>
+      <section>
+        <form>
+          <div className={classes.control}>
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" />
+          </div>
+          <div className={classes.control}>
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" />
+          </div>
+          <button onClick={handleLogin}>Login</button>
+        </form>
+      </section>
+    </main>
+  );
+};
+
+export default Auth;
+
+```
+
+3. For login out and handing the Header content based on isAuthenticated state.
+
+```
+import classes from "./Header.module.css";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../store";
+
+const Header = () => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+  };
+
+  return (
+    <header className={classes.header}>
+      <h1>Redux Auth</h1>
+      {isAuthenticated ? (
+        <nav>
+          <ul>
+            <li>
+              <a href="/">My Products</a>
+            </li>
+            <li>
+              <a href="/">My Sales</a>
+            </li>
+            <li>
+              <button onClick={logoutHandler}>Logout</button>
+            </li>
+          </ul>
+        </nav>
+      ) : (
+        <></>
+      )}
+    </header>
+  );
+};
+
+export default Header;
+```
 
 ## Splitting our Code
 
-## Redux and Side Effects (Asynchronous Code)
-
-## A Problem with useEffect
-
-## Handling HTTP States and Feedback with Redux
-
-## Using an Action Creator Thunk
-
-## Getting Started with Fetching Data
-
-## Finalizing the Fetching Logic
-
-## Exploring the Redux DevTools
-
-```
-
-```
+Refacting the code . To achive the same . Separating the slices into different folders.
