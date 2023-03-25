@@ -1,6 +1,6 @@
 # Redux Toolkit
 
-Author: Smriti Pradhan
+Author: Smriti Pradhan <br/>
 Credits: Maximilian Schwarzmüller
 
 Topics we are going to focus on (Remember this is dummy project.)
@@ -27,7 +27,7 @@ createSlice is even more powerful than create reducer. And it will simplify a co
 
 - name
 - initialState
-- reducers (which is an object)Now we will add reducers which the slice needs.Every method automatically receives the latest state.This methods will by called by Redux,and they will recieve the current state.
+- reducers (which is an object)Now we will add reducers which the slice needs.This methods will by called by Redux,and they will recieve the current state.
 
 Now, here we are allowed to mutate the state.So here we can set state.counter++ for example, for incrementing it. Now this was forbidden.We still must not manipulate the existing state but the good thing is when using Redux toolkit and its functions like create slice, we can't accidentally manipulate the existing state. Because Redux toolkit internally uses another package, called imgur, which will detect code like this and which will automatically clone the existing state,create a new state object, keep all the state which we're not editing, and override the state which we are editing in an immutable way.
 
@@ -361,3 +361,75 @@ export default Header;
 ## Splitting our Code
 
 Refacting the code . To achive the same . Separating the slices into different folders.
+
+index.js
+
+```
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./auth";
+import counterReducer from "./counter";
+
+const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+    auth: authReducer,
+  },
+});
+
+export default store;
+```
+
+auth.js
+
+```
+import { createSlice } from "@reduxjs/toolkit";
+
+const authInitialState = { isAuthenticated: false };
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: authInitialState,
+  reducers: {
+    login(state) {
+      state.isAuthenticated = true;
+    },
+    logout(state) {
+      state.isAuthenticated = false;
+    },
+  },
+});
+
+export default authSlice.reducer;
+export const authActions = authSlice.actions;
+```
+
+counter.js
+
+```
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = { counter: 0, showCounter: false };
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState,
+  reducers: {
+    increament(state) {
+      state.counter += 1;
+    },
+    decreament(state) {
+      state.counter -= 1;
+    },
+    increase(state, action) {
+      state.counter = state.counter + action.payload;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
+});
+
+export default counterSlice.reducer;
+export const counterActions = counterSlice.actions;
+
+```
