@@ -17,6 +17,9 @@ Redux Challenges and Introducing Redux Toolkit.
 3. State Immutability - We have to make sure that we return a brand new State Snapshot and we dont accidently change the existing state anywhere.And we dont accidently change any nested data. Its hard to maintain.
 
 Instead there is another solution to the problem - Redux Toolkit which is developed by the same team which developed Redux.Redux toolkit is simply an extra package which makes working with Redux more convenient and easier.
+<img width="1434" alt="Screenshot 2023-03-25 at 7 33 06 PM" src="https://user-images.githubusercontent.com/47382260/227722039-e660ac98-5a80-43a5-91da-470528a894cb.png">
+<img width="1436" alt="Screenshot 2023-03-25 at 7 34 20 PM" src="https://user-images.githubusercontent.com/47382260/227722040-e60a3dbc-8af8-4997-bea9-b0cfcccb0084.png">
+
 
 ## Get Started with Redux Toolkit , Adding State Slices
 
