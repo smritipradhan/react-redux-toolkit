@@ -37,7 +37,7 @@ createSlice({
       state.counter -= 1;
     },
     increase(state, action) {
-      state.counter = state.counter + action.amout;
+      state.counter = state.counter + action.amount;
     },
     toggleCounter(state) {
       state.showCounter = !state.showCounter;
@@ -51,22 +51,22 @@ createSlice({
 
 ```
 const counterSlice = createSlice({
-name: "counter",
-initialState,
-reducers: {
-increament(state) {
-state.counter += 1;
-},
-decreament(state) {
-state.counter -= 1;
-},
-increase(state, action) {
-state.counter = state.counter + action.amout;
-},
-toggleCounter(state) {
-state.showCounter = !state.showCounter;
-},
-},
+  name: "counter",
+  initialState,
+  reducers: {
+    increament(state) {
+      state.counter += 1;
+    },
+    decreament(state) {
+      state.counter -= 1;
+    },
+    increase(state, action) {
+      state.counter = state.counter + action.amount;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
 });
 
 const store = createStore(counterSlice.reducer); //It is reducer as it is part of many reducers.
@@ -109,33 +109,97 @@ import { createSlice, configureStore } from "@reduxjs/toolkit";
 const initialState = { counter: 0, showCounter: false };
 
 const counterSlice = createSlice({
-name: "counter",
-initialState,
-reducers: {
-increament(state) {
-state.counter += 1;
-},
-decreament(state) {
-state.counter -= 1;
-},
-increase(state, action) {
-state.counter = state.counter + action.amout;
-},
-toggleCounter(state) {
-state.showCounter = !state.showCounter;
-},
-},
+  name: "counter",
+  initialState,
+  reducers: {
+    increament(state) {
+      state.counter += 1;
+    },
+    decreament(state) {
+      state.counter -= 1;
+    },
+    increase(state, action) {
+      state.counter = state.counter + action.amount;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
 });
 
 const store = configureStore({
-reducer: counterSlice.reducer,
+  reducer: counterSlice.reducer,
 });
 
 export default store;
 
+
 ```
 
 ## Migrating Everything to Redux Toolkit
+
+Now for Dispatching Actions, createSlice automatically creates unique identifiers for our different reducers.To get hold of these action identifiers, we can use our counterSlice and access dot actions.That is then an object full of keys,where the the key names, increment, decrement, and so on.And with that we don't access the reducer methods to find up there but instead we get methods created automatically by Redux Toolkit which when called will create action objects for us.
+
+These methods on the actions object here which we can call will create action objects for us. Therefore these methods are called action creators and they will create action objects for us where these objects already have a type property with a unique identifier per action.
+
+The name of the payload is not upon us this time and is predefined so whatever is passed will be in the payload.We can pass a value / object / anything to the payload....
+
+store->index.js
+
+```
+...
+...
+export const counterActions = counterSlice.actions;
+export default store;
+
+
+```
+
+```
+
+import classes from "./Counter.module.css";
+import { useSelector, useDispatch } from "react-redux";
+import { counterActions } from "../store";
+
+const Counter = () => {
+  const counter = useSelector((state) => state.counter);
+  const showCounter = useSelector((state) => state.showCounter);
+  const dispatch = useDispatch();
+
+  const handleIncreament = () => {
+    dispatch(counterActions.increament());
+  };
+
+  const handleDecreament = () => {
+    dispatch(counterActions.decreament());
+  };
+
+  const handleRandom = () => {
+    dispatch(counterActions.increase(10));
+  };
+
+  const toggleCounterHandler = () => {
+    dispatch(counterActions.toggleCounter());
+  };
+
+  return (
+    <main className={classes.counter}>
+      <h1>Redux Counter</h1>
+      <div className={classes.value}>
+        {showCounter && <div> {counter} </div>}
+      </div>
+      <button onClick={handleIncreament}>INCREAMENT</button>
+
+      <button onClick={handleDecreament}>DECREAMENT</button>
+      <button onClick={handleRandom}>Random</button>
+      <button onClick={toggleCounterHandler}>Toggle Counter</button>
+    </main>
+  );
+};
+
+export default Counter;
+
+```
 
 ## Working with Multiple Slices
 
